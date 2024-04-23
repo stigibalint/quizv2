@@ -41,36 +41,16 @@ function KerdesLetrehoz(sor) {
     index++;
     document.querySelector(".quiz-options").innerHTML = "";
     document.querySelector(".question").innerHTML = sor.esemény;
-
-    let betuk = ['A', 'B', 'C', 'D', 'E'];
-    let betuIndex = 0;
-
     if (sor.tétel != "Kosztolányi_Dezső_Számadás") {
         let kerdesek = sorok.filter(x => x.tétel == sor.tétel);
         kerdesek.forEach(x => {
             let ujDiv = document.createElement("div");
             ujDiv.classList.add("quiz-option");
-            ujDiv.innerHTML = `<span class="option-letter">${betuk[betuIndex++]}</span> ${x.válasz}`; 
+            ujDiv.innerHTML = x.válasz;
             ujDiv.addEventListener("click", (y) => {
                 KerdesLetrehoz(sorok[index]);
-                valasztott = y.target.innerHTML.substr(3); 
-                if (valasztott == sor.válasz)
-                    pontszam++;
-                else
-                    hibazott.push(sor);
-            });
-            document.querySelector(".quiz-options").appendChild(ujDiv);
-        });
-    } else {
-        let tomb = ["Mindkettő", "Hajnali részegség", "Halotti beszéd"];
-        tomb.forEach(x => {
-            let ujDiv = document.createElement("div");
-            ujDiv.classList.add("quiz-option");
-            ujDiv.innerHTML = `<span class="option-letter">${betuk[betuIndex++]}</span> ${x}`; 
-            ujDiv.addEventListener("click", (y) => {
-                KerdesLetrehoz(sorok[index]);
-                valasztott = y.target.innerHTML.substr(3); 
-                if (valasztott == sor.válasz)
+                valasztott = y.target.innerHTML;
+                if ( valasztott == sor.válasz)
                     pontszam++;
                 else
                     hibazott.push(sor);
@@ -78,8 +58,23 @@ function KerdesLetrehoz(sor) {
             document.querySelector(".quiz-options").appendChild(ujDiv);
         });
     }
-    
-
+    else {
+        let tomb=["Mindkettő","Hajnali részegség","Halotti beszéd"];         
+        tomb.forEach(x => {
+            let ujDiv = document.createElement("div");
+            ujDiv.classList.add("quiz-option");
+            ujDiv.innerHTML = x;
+            ujDiv.addEventListener("click", (y) => {
+                KerdesLetrehoz(sorok[index]);
+                valasztott = y.target.innerHTML;
+                if ( valasztott == sor.válasz)
+                    pontszam++;
+                else
+                    hibazott.push(sor);
+            });
+            document.querySelector(".quiz-options").appendChild(ujDiv);
+        });
+    }
     if (index >= 2) {
         document.querySelector('.progress-bar').style.display = 'block';
         document.querySelector('.progress-bar').style.width = ((index / sorok.length) * 100) + '%';
@@ -117,3 +112,17 @@ window.onclick = function(event) {
     restartQuiz();
   }
 }
+document.addEventListener('DOMContentLoaded', function () {
+    const startBtn = document.getElementById('start-btn');
+    const startContainer = document.getElementById('start-container');
+    const quizContainers = document.querySelectorAll('.container');
+    const question = document.querySelector('.question');
+
+    startBtn.addEventListener('click', function () {
+        startContainer.style.display = 'none';
+        quizContainers.forEach(container => {
+            container.style.display = 'grid';
+        });
+        question.style.display = 'block';
+    });
+});
